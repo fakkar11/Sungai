@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sungai-Sungai di Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .river-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .river-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .search-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="hero-bg text-white py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-4">🏞️ Sungai-Sungai Indonesia</h1>
+            <p class="text-xl opacity-90 mb-8">Jelajahi keindahan sungai-sungai terpanjang dan terpenting di Nusantara</p>
+            
+            <!-- Search Box -->
+            <div class="max-w-md mx-auto">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Cari sungai..." 
+                    class="search-box w-full px-6 py-3 rounded-full text-gray-800 placeholder-gray-500 border-0 focus:outline-none focus:ring-2 focus:ring-white"
+                >
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg">
+                <div class="text-3xl font-bold text-blue-600 mb-2" id="totalRivers">12</div>
+                <div class="text-gray-600">Total Sungai</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg">
+                <div class="text-3xl font-bold text-green-600 mb-2">5</div>
+                <div class="text-gray-600">Pulau Utama</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg">
+                <div class="text-3xl font-bold text-purple-600 mb-2">1,000+</div>
+                <div class="text-gray-600">Km Terpanjang</div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <button onclick="filterRivers('all')" class="filter-btn bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">Semua</button>
+            <button onclick="filterRivers('Sumatera')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">Sumatera</button>
+            <button onclick="filterRivers('Jawa')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">Jawa</button>
+            <button onclick="filterRivers('Kalimantan')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">Kalimantan</button>
+            <button onclick="filterRivers('Sulawesi')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">Sulawesi</button>
+            <button onclick="filterRivers('Papua')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">Papua</button>
+        </div>
+
+        <!-- Rivers Grid -->
+        <div id="riversGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- River cards will be populated by JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center py-12 hidden">
+            <div class="text-6xl mb-4">🔍</div>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">Tidak ada sungai yang ditemukan</h3>
+            <p class="text-gray-500">Coba kata kunci lain atau pilih filter yang berbeda</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-400">© 2024 Sungai Indonesia. Dibuat dengan ❤️ untuk mengenal kekayaan alam Indonesia</p>
+        </div>
+    </footer>
+
+    <script>
+        const rivers = [
+            {
+                name: "Sungai Kapuas",
+                island: "Kalimantan",
+                length: "1,143 km",
+                province: "Kalimantan Barat",
+                description: "Sungai terpanjang di Indonesia yang mengalir melalui Kalimantan Barat",
+                icon: "🌊"
+            },
+            {
+                name: "Sungai Barito",
+                island: "Kalimantan", 
+                length: "900 km",
+                province: "Kalimantan Selatan",
+                description: "Sungai utama di Kalimantan Selatan dengan delta yang luas",
+                icon: "🏞️"
+            },
+            {
+                name: "Sungai Mahakam",
+                island: "Kalimantan",
+                length: "920 km", 
+                province: "Kalimantan Timur",
+                description: "Sungai terpenting di Kalimantan Timur untuk transportasi dan ekonomi",
+                icon: "⛵"
+            },
+            {
+                name: "Sungai Musi",
+                island: "Sumatera",
+                length: "750 km",
+                province: "Sumatera Selatan", 
+                description: "Sungai terpanjang di Sumatera yang mengalir ke Selat Bangka",
+                icon: "🌊"
+            },
+            {
+                name: "Sungai Batanghari",
+                island: "Sumatera",
+                length: "800 km",
+                province: "Jambi",
+                description: "Sungai utama di Provinsi Jambi dengan hulu di Pegunungan Bukit Barisan",
+                icon: "🏔️"
+            },
+            {
+                name: "Sungai Kampar",
+                island: "Sumatera", 
+                length: "400 km",
+                province: "Riau",
+                description: "Sungai di Riau yang terkenal dengan fenomena bono atau gelombang pasang",
+                icon: "🌊"
+            },
+            {
+                name: "Sungai Solo",
+                island: "Jawa",
+                length: "600 km", 
+                province: "Jawa Tengah & Jawa Timur",
+                description: "Sungai terpanjang di Pulau Jawa yang mengalir dari Wonogiri ke Gresik",
+                icon: "🏛️"
+            },
+            {
+                name: "Sungai Brantas",
+                island: "Jawa",
+                length: "320 km",
+                province: "Jawa Timur",
+                description: "Sungai bersejarah di Jawa Timur yang mengalir melalui Malang dan Surabaya",
+                icon: "🏯"
+            },
+            {
+                name: "Sungai Citarum",
+                island: "Jawa", 
+                length: "300 km",
+                province: "Jawa Barat",
+                description: "Sungai terpanjang di Jawa Barat yang mengalir melalui Bandung",
+                icon: "🌸"
+            },
+            {
+                name: "Sungai Mamberamo",
+                island: "Papua",
+                length: "670 km",
+                province: "Papua",
+                description: "Sungai terbesar di Papua dengan keanekaragaman hayati yang tinggi",
+                icon: "🦜"
+            },
+            {
+                name: "Sungai Digul", 
+                island: "Papua",
+                length: "500 km",
+                province: "Papua Selatan",
+                description: "Sungai penting di Papua bagian selatan dengan hutan hujan tropis",
+                icon: "🌳"
+            },
+            {
+                name: "Sungai Sadang",
+                island: "Sulawesi",
+                length: "250 km", 
+                province: "Sulawesi Selatan",
+                description: "Sungai utama di Sulawesi Selatan yang mengalir melalui Makassar",
+                icon: "🏝️"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let filteredRivers = [...rivers];
+
+        function renderRivers(riversToRender) {
+            const grid = document.getElementById('riversGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (riversToRender.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            
+            grid.innerHTML = riversToRender.map(river => `
+                <div class="river-card rounded-xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-4xl">${river.icon}</span>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">${river.island}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${river.name}</h3>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm opacity-90">
+                            <span class="mr-2">📏</span>
+                            <span>Panjang: ${river.length}</span>
+                        </div>
+                        <div class="flex items-center text-sm opacity-90">
+                            <span class="mr-2">📍</span>
+                            <span>${river.province}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm opacity-90 leading-relaxed">${river.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function filterRivers(island) {
+            currentFilter = island;
+            
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            // Filter rivers
+            if (island === 'all') {
+                filteredRivers = [...rivers];
+            } else {
+                filteredRivers = rivers.filter(river => river.island === island);
+            }
+            
+            renderRivers(filteredRivers);
+        }
+
+        function searchRivers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let searchResults;
+            if (currentFilter === 'all') {
+                searchResults = rivers;
+            } else {
+                searchResults = rivers.filter(river => river.island === currentFilter);
+            }
+            
+            searchResults = searchResults.filter(river => 
+                river.name.toLowerCase().includes(searchTerm) ||
+                river.province.toLowerCase().includes(searchTerm) ||
+                river.description.toLowerCase().includes(searchTerm)
+            );
+            
+            renderRivers(searchResults);
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchRivers);
+
+        // Initial render
+        renderRivers(rivers);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971889cd526afe1c',t:'MTc1NTU5NDg0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
